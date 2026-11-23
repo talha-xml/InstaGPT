@@ -1,22 +1,22 @@
 const { chromium } = require('playwright');
+const path = require('path');
 
-let browser = null;
 let context = null;
 let page = null;
 
+const userDataDir = path.resolve(__dirname, '../../.auth/instagram');
+
 async function startBrowser() {
-  if (browser) {
+  if (context) {
     return { status: 'already_running' };
   }
 
-  browser = await chromium.launch({
+  context = await chromium.launchPersistentContext(userDataDir, {
     headless: false
   });
 
-  context = await browser.newContext();
-
-  page = await context.newPage();
-
+  const pages = context.pages();
+  page = pages.length > 0 ? pages[0] : await context.newPage();
   await page.goto('https://www.instagram.com/');
 
   return {
@@ -26,10 +26,9 @@ async function startBrowser() {
 }
 
 async function closeBrowser() {
-  if (browser) {
-    await browser.close();
+  if (context) {
+    await context.close();
 
-    browser = null;
     context = null;
     page = null;
   }

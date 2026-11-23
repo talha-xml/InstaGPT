@@ -10,6 +10,17 @@ __pycache__/
 *.py[cod]
 .python-version
 
+# Python cache and testing
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+.env*.local
 # Logs
 logs/
 *.log
